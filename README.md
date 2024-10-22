@@ -10,8 +10,112 @@ This project conducts a thorough analysis and visualization of global GDP trends
 - Excel: For additional data manipulation and visualization.
 - Tableau: For creating interactive dashboards and visualizations.
 
-## Dataset
-The dataset includes GDP values for various countries from 2015 to 2024, as well as calculated total GDP and average growth rates. The data was cleaned and prepared for analysis using SQL and R.
+## SQL Queries and Analysis
+This collection of SQL queries processes and analyzes GDP data from the GDPS_PER_COUNTRY database. Key operations include retrieving all records, handling missing values with COALESCE, and calculating growth rates for each country across multiple years. The queries also identify the top countries by total GDP and average growth rates, providing insights into economic performance. Additionally, the results are exported to a CSV file for further analysis and visualization in tools like R and Excel.
+
+SELECT* FROM GDPS_PER_COUNTRY;
+
+SET y2016 = COALESCE(y2016, y2015),
+    y2017 = COALESCE(y2017, y2016),
+    y2018 = COALESCE(y2018, y2017),
+    y2019 = COALESCE(y2019, y2018),
+    y2020 = COALESCE(y2020, y2019),
+    y2021 = COALESCE(y2021, y2020),
+    y2022 = COALESCE(y2022, y2021),
+    y2023 = COALESCE(y2023, y2022),
+    y2024 = COALESCE(y2024, y2023);
+    
+   SELECT Country, y2015, y2016, y2017, y2018, y2019, y2020, y2021, y2022, y2023, y2024
+FROM GDPS_PER_COUNTRY
+LIMIT 10;  -- Check the first 10 rows
+
+# Check for Remaining Missing Values:
+
+SELECT
+    SUM(CASE WHEN y2015 IS NULL THEN 1 ELSE 0 END) AS y2015_nulls,
+    SUM(CASE WHEN y2016 IS NULL THEN 1 ELSE 0 END) AS y2016_nulls,
+    SUM(CASE WHEN y2017 IS NULL THEN 1 ELSE 0 END) AS y2017_nulls,
+    SUM(CASE WHEN y2018 IS NULL THEN 1 ELSE 0 END) AS y2018_nulls,
+    SUM(CASE WHEN y2019 IS NULL THEN 1 ELSE 0 END) AS y2019_nulls,
+    SUM(CASE WHEN y2020 IS NULL THEN 1 ELSE 0 END) AS y2020_nulls,
+    SUM(CASE WHEN y2021 IS NULL THEN 1 ELSE 0 END) AS y2021_nulls,
+    SUM(CASE WHEN y2022 IS NULL THEN 1 ELSE 0 END) AS y2022_nulls,
+    SUM(CASE WHEN y2023 IS NULL THEN 1 ELSE 0 END) AS y2023_nulls,
+    SUM(CASE WHEN y2024 IS NULL THEN 1 ELSE 0 END) AS y2024_nulls
+FROM GDPS_PER_COUNTRY;
+
+# Proceed with Data Analysis or Visualization:
+
+SELECT *
+INTO OUTFILE 'C:/path/to/cleaned_gdp_data.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM GDPS_PER_COUNTRY;
+
+SHOW VARIABLES LIKE 'secure_file_priv';
+
+# Calculating the Average GDP Growth for Each Country (Across Years)
+SELECT Country,
+       ( (y2024 - y2023) / y2023 * 100 ) AS growth_2023_to_2024,
+       ( (y2023 - y2022) / y2022 * 100 ) AS growth_2022_to_2023,
+       ( (y2022 - y2021) / y2021 * 100 ) AS growth_2021_to_2022,
+       ( (y2021 - y2020) / y2020 * 100 ) AS growth_2020_to_2021,
+       ( (y2020 - y2019) / y2019 * 100 ) AS growth_2019_to_2020,
+       ( (y2019 - y2018) / y2018 * 100 ) AS growth_2018_to_2019,
+       ( (y2018 - y2017) / y2017 * 100 ) AS growth_2017_to_2018,
+       ( (y2017 - y2016) / y2016 * 100 ) AS growth_2016_to_2017,
+       ( (y2016 - y2015) / y2015 * 100 ) AS growth_2015_to_2016
+FROM GDPS_PER_COUNTRY;
+
+ # Find Top Countries by GDP for a Specific Year
+
+SELECT Country, y2024
+FROM GDPS_PER_COUNTRY
+ORDER BY y2024 DESC
+LIMIT 10;  -- To get the top 10 countries
+
+SELECT Country, y2022, y2023, y2024
+FROM GDPS_PER_COUNTRY
+ORDER BY y2024 DESC
+LIMIT 10;
+
+# Calculate Total and Average GDP Over Multiple Years
+
+SELECT Country, 
+       (y2015 + y2016 + y2017 + y2018 + y2019 + y2020 + y2021 + y2022 + y2023 + y2024) / 10 AS avg_gdp
+FROM GDPS_PER_COUNTRY;
+
+# SQL Query for Total GDP (Across Years):
+
+SELECT Country, 
+       (y2015 + y2016 + y2017 + y2018 + y2019 + y2020 + y2021 + y2022 + y2023 + y2024) AS total_gdp
+FROM GDPS_PER_COUNTRY;
+
+# Identify Countries with the Highest GDP Growth & SQL Query for GDP Growth from 2015 to 2024:
+
+SELECT Country,
+       ((y2024 - y2015) / y2015 * 100) AS total_growth
+FROM GDPS_PER_COUNTRY
+ORDER BY total_growth DESC
+LIMIT 10;  -- To find the top 10 countries with the highest growth
+
+# Finding Countries with Declining GDP
+# SQL Query for Countries with Negative Growth:
+SELECT Country,
+       ((y2024 - y2015) / y2015 * 100) AS total_growth
+FROM GDPS_PER_COUNTRY
+WHERE ((y2024 - y2015) / y2015 * 100) < 0
+ORDER BY total_growth ASC;
+
+SELECT * 
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/cleaned_gdp_data.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+FROM GDPS_PER_COUNTRY;
+
+SHOW VARIABLES LIKE 'secure_file_priv';
 
 ### Key Features of the Dataset:
 - Columns include country names, GDP for each year, total GDP, and average growth rates.
