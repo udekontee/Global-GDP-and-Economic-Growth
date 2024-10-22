@@ -1,7 +1,7 @@
 # Global GDP and Economic Growth Analysis (2015-2024)
 This repository analyzes global GDP trends and growth rates from 2015 to 2024 using data from data.gov. It utilizes MySQL, R, Excel, and Tableau for data cleaning and visualization, providing insights into the economic performance of various countries through charts and graphs.
 
-## Project Overview
+# Project Overview
 This project conducts a thorough analysis and visualization of global GDP trends and growth rates from 2015 to 2024, leveraging data from diverse countries. It aims to uncover critical economic patterns and insights that can guide informed decision-making in economic policy and strategic investments.
 
 ## Tools Used
@@ -9,6 +9,92 @@ This project conducts a thorough analysis and visualization of global GDP trends
 - R: For data analysis and visualization using packages such as ggplot2, dplyr, janitor, and skimr.
 - Excel: For additional data manipulation and visualization.
 - Tableau: For creating interactive dashboards and visualizations.
+
+## Data Mapping, Cleaning, visualizing and Analysis using R
+This R code conducts a thorough analysis of GDP data, identifying the top 10 countries by total GDP and average growth rate for 2023-2024. It utilizes data manipulation with dplyr to calculate percentages and create visualizations, including bar and pie charts using ggplot2, effectively illustrating economic trends and performance across countries.
+
+# Description of R Code
+
+## Top 10 countries by total GDP
+top_10_gdp <- cleaned_gdp_data1 %>%
+  arrange(desc(total)) %>%
+  slice(1:10)  # Get the top 10
+  
+## Top 10 countries by growth rate (2023-2024) with specific columns
+top_10_growth <- cleaned_gdp_data1 %>%
+  arrange(desc(avg_growth_rate_2023_2024)) %>%
+  slice(1:10) %>%
+  select(country, avg_growth_rate_2023_2024)
+
+## Bar chart for top 10 GDP
+ggplot(top_10_gdp, aes(x = reorder(country, -total), y = total)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Horizontal bar chart
+  labs(title = "Top 10 Countries by Total GDP", x = "Country", y = "Total GDP")
+
+  ![image](https://github.com/user-attachments/assets/c3215f76-08a1-4977-89da-5a9e8f200905)
+
+# Line chart for top 10 countries by growth rate
+ggplot(top_10_growth, aes(x = reorder(country, -avg_growth_rate_2023_2024), y = avg_growth_rate_2023_2024, group = 1)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Top 10 Countries by Growth Rate (2023-2024)", x = "Country", y = "Growth Rate (%)")
+
+## Calculate the percentage of total GDP
+top_10_gdp <- top_10_gdp %>%
+  mutate(percentage = total / sum(total) * 100)
+
+## Donut chart with percentages
+top_10_gdp %>%
+  ggplot(aes(x = 2, y = percentage, fill = country)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  xlim(0.5, 2.5) +  # Creates the donut hole
+  labs(title = "Top 10 Countries by Total GDP (Percentage)", x = NULL, y = NULL) +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            size = 4) +  # Adjust text size for clarity
+  theme_void()  # Removes background and axis for a cleaner look
+
+ggplot(data = cleaned_gdp_data1, aes(x = country, y = total, fill = region)) +
+  geom_bar(stat = "identity")
+
+ggplot(data = cleaned_gdp_data1, aes(x = country, y = total, fill = country)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Horizontal bar chart for better readability
+  labs(title = "Total GDP by Country")
+
+str(cleaned_gdp_data1)
+
+ggplot(data = cleaned_gdp_data1, aes(x = reorder(country, -total), y = total, fill = country)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Horizontal bar chart for better readability
+  labs(title = "Total GDP by Country", x = "Country", y = "Total GDP")
+
+## Ensure the total is numeric
+cleaned_gdp_data1$total <- as.numeric(cleaned_gdp_data1$total)
+
+## Ensure country is a factor
+cleaned_gdp_data1$country <- as.factor(cleaned_gdp_data1$country)
+
+ggplot(data = cleaned_gdp_data1, aes(x = reorder(country, -total), y = total, fill = country)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Horizontal bar chart for better readability
+  labs(title = "Total GDP by Country", x = "Country", y = "Total GDP")
+
+## Calculate the percentage of growth rates
+top_10_growth <- top_10_growth %>%
+  mutate(percentage = avg_growth_rate_2023_2024 / sum(avg_growth_rate_2023_2024) * 100)
+
+## Create a pie chart for average growth rates
+ggplot(top_10_growth, aes(x = "", y = percentage, fill = reorder(country, -avg_growth_rate_2023_2024))) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Top 10 Countries by Growth Rate (2023-2024)", x = NULL, y = NULL) +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            size = 4) +  # Adjust text size for clarity
+  theme_void()  # Removes background and axes for a cleaner look
 
 ## SQL Queries and Analysis
 This collection of SQL queries processes and analyzes GDP data from the GDPS_PER_COUNTRY database. Key operations include retrieving all records, handling missing values with COALESCE, and calculating growth rates for each country across multiple years. The queries also identify the top countries by total GDP and average growth rates, providing insights into economic performance. Additionally, the results are exported to a CSV file for further analysis and visualization in tools like R and Excel.
@@ -29,7 +115,7 @@ SET y2016 = COALESCE(y2016, y2015),
 FROM GDPS_PER_COUNTRY
 LIMIT 10;  -- Check the first 10 rows
 
-# Check for Remaining Missing Values:
+## Check for Remaining Missing Values:
 
 SELECT
     SUM(CASE WHEN y2015 IS NULL THEN 1 ELSE 0 END) AS y2015_nulls,
@@ -44,7 +130,7 @@ SELECT
     SUM(CASE WHEN y2024 IS NULL THEN 1 ELSE 0 END) AS y2024_nulls
 FROM GDPS_PER_COUNTRY;
 
-# Proceed with Data Analysis or Visualization:
+## Proceed with Data Analysis or Visualization:
 
 SELECT *
 INTO OUTFILE 'C:/path/to/cleaned_gdp_data.csv'
@@ -55,7 +141,7 @@ FROM GDPS_PER_COUNTRY;
 
 SHOW VARIABLES LIKE 'secure_file_priv';
 
-# Calculating the Average GDP Growth for Each Country (Across Years)
+## Calculating the Average GDP Growth for Each Country (Across Years)
 SELECT Country,
        ( (y2024 - y2023) / y2023 * 100 ) AS growth_2023_to_2024,
        ( (y2023 - y2022) / y2022 * 100 ) AS growth_2022_to_2023,
@@ -68,7 +154,7 @@ SELECT Country,
        ( (y2016 - y2015) / y2015 * 100 ) AS growth_2015_to_2016
 FROM GDPS_PER_COUNTRY;
 
- # Find Top Countries by GDP for a Specific Year
+## Find Top Countries by GDP for a Specific Year
 
 SELECT Country, y2024
 FROM GDPS_PER_COUNTRY
@@ -80,7 +166,7 @@ FROM GDPS_PER_COUNTRY
 ORDER BY y2024 DESC
 LIMIT 10;
 
-# Calculate Total and Average GDP Over Multiple Years
+## Calculate Total and Average GDP Over Multiple Years
 
 SELECT Country, 
        (y2015 + y2016 + y2017 + y2018 + y2019 + y2020 + y2021 + y2022 + y2023 + y2024) / 10 AS avg_gdp
