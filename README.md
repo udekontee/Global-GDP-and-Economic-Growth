@@ -1,5 +1,5 @@
 # Global GDP and Economic Growth Analysis (2015-2024)
-This repository analyzes global GDP trends and growth rates from 2015 to 2024 using data from data.gov. It utilizes MySQL, R, Excel, and Tableau for data cleaning and visualization, providing insights into the economic performance of various countries through charts and graphs.
+This project analyzes and compares leading economies' GDP and average growth rates from 2019 to 2024. It includes data visualizations that show the economic contributions of top global economies, highlighting the overall GDP growth trends and the percentage contribution of each country to the global economy. The insights from this analysis can help inform broader discussions on economic development and potential impacts on sustainable development goals.
 
 # Project Overview
 This project conducts a thorough analysis and visualization of global GDP trends and growth rates from 2015 to 2024, leveraging data from diverse countries. It aims to uncover critical economic patterns and insights that can guide informed decision-making in economic policy and strategic investments.
