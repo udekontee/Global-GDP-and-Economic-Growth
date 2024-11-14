@@ -236,9 +236,10 @@ The chart titled **"Percent of Total GDP/Country 2015 - 2024"** illustrates the 
 ![image](https://github.com/user-attachments/assets/103bdf84-8740-41de-a2a7-c7f42180f149)
 
 ## Total GDP per Country 2015 - 2024
-The chart titled "Total GDP per Country 2015 - 2024" presents a comparison of total GDP values for various countries over the specified period. The bar chart clearly illustrates the significant economic disparity among these nations, with the United States and China leading by a substantial margin. The United States shows the highest total GDP, reaching nearly $20 trillion, while China follows closely with similar figures. Other countries, such as Germany, the United Kingdom, and India, display markedly lower GDP figures, emphasizing the dominance of the U.S. and China in the global economy. The visualization effectively highlights the economic landscape and the relative size of each country's economy.
-![image](https://github.com/user-attachments/assets/b2f2874b-32f3-482b-be44-b5d1ecb48de5)
+The chart titled "Total GDP per Country 2015 - 2024" presents a comparison of total GDP values for various countries over the specified period. The bar chart clearly illustrates the significant economic disparity among these nations, with the United States and China leading by a substantial margin. The United States shows the highest total GDP, reaching nearly $20 trillion, while China follows closely with similar figures. Other countries, such as Germany, the United Kingdom, and India, display markedly lower GDP figures, emphasizing the dominance of the U.S. and China in the global economy. 
 
+The visualization effectively highlights the economic landscape and the relative size of each country's economy.
+![image](https://github.com/user-attachments/assets/b2f2874b-32f3-482b-be44-b5d1ecb48de5)
 
 ### Prerequisites
 - Install the necessary software (MySQL, R, Excel, Tableau).
